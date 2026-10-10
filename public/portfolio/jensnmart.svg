@@ -1,0 +1,14 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="560" rx="32" fill="#050816"/>
+  <rect x="34" y="34" width="892" height="492" rx="26" fill="url(#bg)"/>
+  <rect x="86" y="86" width="220" height="388" rx="34" fill="#080d1c" stroke="#7B2DFF"/>
+  <rect x="126" y="136" width="120" height="10" rx="5" fill="#7B2DFF"/>
+  <rect x="126" y="170" width="86" height="8" rx="4" fill="#1EA7FF"/>
+  <rect x="126" y="230" width="138" height="78" rx="18" fill="#111C3A"/>
+  <rect x="126" y="336" width="92" height="12" rx="6" fill="#7B2DFF"/>
+  <rect x="350" y="92" width="524" height="376" rx="30" fill="#080d1c" stroke="#20395F"/>
+  <path d="M394 396L492 292L590 342L724 184L830 248" stroke="#7B2DFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="724" cy="184" r="46" fill="#1EA7FF" fill-opacity=".22" stroke="#1EA7FF" stroke-width="8"/>
+  <text x="394" y="160" fill="white" font-family="Arial" font-size="42" font-weight="700">JensnMart</text>
+  <defs><linearGradient id="bg" x1="34" y1="34" x2="926" y2="526"><stop stop-color="#111827"/><stop offset=".45" stop-color="#08142B"/><stop offset="1" stop-color="#32106B"/></linearGradient></defs>
+</svg>

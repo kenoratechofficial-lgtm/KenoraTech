@@ -1,0 +1,11 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="560" rx="32" fill="#050816"/>
+  <rect x="34" y="34" width="892" height="492" rx="28" fill="url(#bg)"/>
+  <rect x="86" y="92" width="788" height="376" rx="28" fill="#070B18" stroke="#26385E"/>
+  <text x="130" y="214" fill="white" font-family="Arial" font-size="52" font-weight="700">Creative Digital</text>
+  <text x="130" y="270" fill="white" font-family="Arial" font-size="52" font-weight="700">Agency</text>
+  <rect x="132" y="328" width="146" height="14" rx="7" fill="#8B1CFF"/>
+  <rect x="132" y="362" width="226" height="10" rx="5" fill="#1EA7FF" fill-opacity=".7"/>
+  <circle cx="708" cy="282" r="118" fill="url(#orb)" stroke="#9B31FF" stroke-width="8"/>
+  <defs><linearGradient id="bg" x1="34" y1="34" x2="926" y2="526"><stop stop-color="#070B18"/><stop offset=".5" stop-color="#170B3B"/><stop offset="1" stop-color="#030711"/></linearGradient><radialGradient id="orb" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(666 222) rotate(55) scale(196)"><stop stop-color="#9B31FF"/><stop offset=".52" stop-color="#5214C8"/><stop offset="1" stop-color="#11092A"/></radialGradient></defs>
+</svg>

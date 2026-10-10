@@ -1,0 +1,7 @@
+import nodemailer from "nodemailer";
+import type { Appointment } from "@/lib/appointments";
+
+function config() { const host = process.env.SMTP_HOST?.trim(), port = Number(process.env.SMTP_PORT), user = process.env.SMTP_USER?.trim(), pass = process.env.SMTP_PASS?.trim(), from = process.env.MAIL_FROM?.trim(); return host && port && user && pass && from ? { host, port, user, pass, from } : null; }
+export async function sendAppointmentEmails(appointment: Appointment) { const settings = config(); if (!settings) return false; const mailer = nodemailer.createTransport({ ...settings, secure: false, auth: { user: settings.user, pass: settings.pass } }); const details = `Consultation: ${appointment.projectType}\nDate: ${appointment.appointmentDate}\nTime: ${appointment.appointmentTime}\nDuration: ${appointment.duration} minutes\nStatus: Pending confirmation`;
+  await mailer.sendMail({ from: settings.from, to: appointment.email, subject: "Consultation request received — KenoraTech", text: `Hi ${appointment.name},\n\nYour consultation request has been received. We will confirm your selected time by email.\n\n${details}\n\nKenoraTech` });
+  if (process.env.CAREERS_ADMIN_EMAIL) await mailer.sendMail({ from: settings.from, to: process.env.CAREERS_ADMIN_EMAIL, subject: `New consultation request — ${appointment.projectType}`, text: `${appointment.name}\n${appointment.email}\n${appointment.phone}\n${appointment.company}\n\n${details}\n\nProject description:\n${appointment.projectDescription}` }); return true; }

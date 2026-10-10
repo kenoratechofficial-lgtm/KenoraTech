@@ -1,0 +1,9 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="560" rx="32" fill="#050816"/>
+  <rect x="34" y="34" width="892" height="492" rx="28" fill="url(#bg)"/>
+  <rect x="246" y="144" width="468" height="272" rx="26" fill="#080910" stroke="#25253A"/>
+  <path d="M480 190L570 356H526L480 272L434 356H390L480 190Z" fill="#A891FF"/>
+  <path d="M480 266L520 356H440L480 266Z" fill="#050816"/>
+  <text x="376" y="430" fill="white" font-family="Arial" font-size="40" letter-spacing="14">AUREX</text>
+  <defs><linearGradient id="bg" x1="34" y1="34" x2="926" y2="526"><stop stop-color="#111116"/><stop offset=".52" stop-color="#07080D"/><stop offset="1" stop-color="#19152B"/></linearGradient></defs>
+</svg>

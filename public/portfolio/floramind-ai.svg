@@ -1,0 +1,15 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="560" rx="32" fill="#050816"/>
+  <rect x="34" y="34" width="892" height="492" rx="28" fill="url(#bg)"/>
+  <rect x="74" y="72" width="812" height="416" rx="26" fill="#071510" stroke="#1B7E54"/>
+  <text x="108" y="170" fill="white" font-family="Arial" font-size="54" font-weight="700">FloraMind AI</text>
+  <text x="112" y="214" fill="#B8FFD7" font-family="Arial" font-size="24">Plant care made smart</text>
+  <ellipse cx="680" cy="358" rx="118" ry="34" fill="#08100C"/>
+  <rect x="594" y="270" width="172" height="146" rx="22" fill="#101B14"/>
+  <path d="M680 274C612 208 610 136 688 94C724 168 710 232 680 274Z" fill="#65E69A"/>
+  <path d="M690 280C764 234 808 170 782 92C716 132 682 198 690 280Z" fill="#2CB86F"/>
+  <path d="M662 282C592 260 538 206 532 132C610 148 660 202 662 282Z" fill="#1F8F5D"/>
+  <rect x="112" y="316" width="130" height="76" rx="18" fill="#0D2117" stroke="#245E42"/>
+  <rect x="270" y="316" width="130" height="76" rx="18" fill="#0D2117" stroke="#245E42"/>
+  <defs><linearGradient id="bg" x1="34" y1="34" x2="926" y2="526"><stop stop-color="#06130E"/><stop offset=".5" stop-color="#0B3922"/><stop offset="1" stop-color="#010805"/></linearGradient></defs>
+</svg>

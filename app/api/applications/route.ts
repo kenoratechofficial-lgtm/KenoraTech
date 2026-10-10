@@ -1,0 +1,9 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { isAuthorizedAdmin } from "@/lib/admin-auth";
+import { createApplication, listApplications } from "@/lib/applications";
+import { uploadCareerResume } from "@/lib/cloudinary";
+import { sendApplicationEmails } from "@/lib/careers-mail";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export async function GET(request: NextRequest) { if (!isAuthorizedAdmin(request)) return NextResponse.json({ error: "Unauthorized." }, { status: 401 }); try { return NextResponse.json({ applications: await listApplications() }); } catch { return NextResponse.json({ error: "Unable to load applications." }, { status: 503 }); } }
+export async function POST(request: NextRequest) { try { const form = await request.formData(); const resume = form.get("resume"); if (!(resume instanceof File) || !resume.size) return NextResponse.json({ error: "A resume is required." }, { status: 400 }); if (resume.size > 8 * 1024 * 1024) return NextResponse.json({ error: "Resumes must be 8 MB or smaller." }, { status: 400 }); const allowed = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]; if (!allowed.includes(resume.type)) return NextResponse.json({ error: "Please upload a PDF or Word document." }, { status: 400 }); const upload = await uploadCareerResume(resume); const values = Object.fromEntries(form.entries()) as Record<string, unknown>; const application = await createApplication({ ...values, resumeName: resume.name, resumeUrl: upload.url }); void sendApplicationEmails(application); return NextResponse.json({ application }, { status: 201 }); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to submit application." }, { status: 400 }); } }

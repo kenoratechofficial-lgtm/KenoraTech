@@ -1,0 +1,31 @@
+# Dependencies and generated builds
+node_modules/
+.next/
+.next-build/
+out/
+dist/
+.vercel/
+coverage/
+
+# Local environment files and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs, caches and TypeScript build data
+*.log
+.eslintcache
+*.tsbuildinfo
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local-only project notes
+SEO_GUIDE.txt
+ARCHITECTURE_GUIDE.txt
+REPO_STRUCTURE_GUIDE.txt

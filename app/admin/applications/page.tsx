@@ -1,0 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
+import { Loading } from "@/components/admin/Loading";
+import type { Application } from "@/lib/applications";
+
+export default function ApplicationsPage() {
+  const [items, setItems] = useState<Application[]>([]); const [loading, setLoading] = useState(true); const [error, setError] = useState("");
+  async function load() { const token = localStorage.getItem("kenora-admin-token") || ""; const response = await fetch("/api/applications", { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" }); const body = await response.json().catch(() => null); setItems(response.ok ? body?.applications || [] : []); setError(response.ok ? "" : body?.error || "Unable to load applications."); setLoading(false); }
+  useEffect(() => { void load(); }, []);
+  async function update(id: string, status: Application["status"]) { const token = localStorage.getItem("kenora-admin-token") || ""; const response = await fetch(`/api/applications/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ status }) }); if (response.ok) void load(); else setError("Unable to update the application."); }
+  if (loading) return <Loading />;
+  return <div className="grid gap-7"><PageHeader title="Job Applications" description="Review applicants and move them through the hiring pipeline." />{error && <p className="rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</p>}{items.length ? <div className="grid gap-3">{items.map((item) => <article key={item.id} className="flex flex-col gap-4 rounded-2xl border border-white/[0.08] bg-[#0D1323]/78 p-5 md:flex-row md:items-start"><div className="min-w-0 flex-1"><div className="flex flex-wrap items-baseline gap-x-3 gap-y-1"><h2 className="font-bold text-white">{item.fullName}</h2><p className="text-sm text-white/50">Applied for {item.jobTitle}</p></div><p className="mt-2 text-sm text-white/65">{item.email}{item.phone ? ` · ${item.phone}` : ""}{item.location ? ` · ${item.location}` : ""}</p>{item.coverLetter && <p className="mt-3 rounded-xl bg-[#050816]/70 p-3 text-sm leading-6 text-white/65">{item.coverLetter}</p>}{item.resumeName && <p className="mt-3 text-xs text-[#93dcff]">Resume selected: {item.resumeName}</p>}<p className="mt-3 text-xs text-white/38">{new Date(item.createdAt).toLocaleString()}</p></div><select aria-label={`Status for ${item.fullName}`} value={item.status} onChange={(event) => void update(item.id, event.target.value as Application["status"])} className="h-10 rounded-xl border border-white/[0.1] bg-[#050816] px-3 text-sm text-white outline-none"><option>New</option><option>Shortlisted</option><option>Interview</option><option>Rejected</option><option>Hired</option></select></article>)}</div> : <EmptyState title="No applications yet" description="Submitted applications will appear here." />}</div>;
+}

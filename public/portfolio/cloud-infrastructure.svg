@@ -1,0 +1,12 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="560" rx="32" fill="#050816"/>
+  <rect x="34" y="34" width="892" height="492" rx="28" fill="url(#bg)"/>
+  <path d="M256 384H704L774 434H186L256 384Z" fill="#111641" stroke="#7B2DFF"/>
+  <rect x="310" y="296" width="110" height="92" rx="16" fill="#0C1430" stroke="#1EA7FF"/>
+  <rect x="456" y="296" width="110" height="92" rx="16" fill="#0C1430" stroke="#8B1CFF"/>
+  <rect x="602" y="296" width="110" height="92" rx="16" fill="#0C1430" stroke="#1EA7FF"/>
+  <path d="M356 266C344 190 404 142 468 172C502 104 600 104 632 182C700 184 742 232 728 296H324C272 292 258 232 296 202C312 190 332 184 354 188" fill="#152164" stroke="#7B2DFF" stroke-width="8"/>
+  <path d="M462 244L500 204L538 244" stroke="#25B6FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="406" y="452" fill="white" font-family="Arial" font-size="34" font-weight="700">Cloud Systems</text>
+  <defs><linearGradient id="bg" x1="34" y1="34" x2="926" y2="526"><stop stop-color="#08152D"/><stop offset=".5" stop-color="#170B46"/><stop offset="1" stop-color="#061A3B"/></linearGradient></defs>
+</svg>
