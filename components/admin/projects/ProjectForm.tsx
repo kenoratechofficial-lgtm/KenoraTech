@@ -23,6 +23,7 @@ const emptyForm = {
   title: "",
   category: "",
   description: "",
+  intro: "",
   result: "",
   tags: "",
   imageUrl: "",
@@ -37,6 +38,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
     title: initialProject?.title || emptyForm.title,
     category: initialProject?.category || emptyForm.category,
     description: initialProject?.description || emptyForm.description,
+    intro: initialProject?.intro || "",
     result: initialProject?.result || emptyForm.result,
     tags: initialProject?.tags.join(", ") || emptyForm.tags,
     imageUrl: initialProject?.imageUrl || emptyForm.imageUrl,
@@ -142,6 +144,9 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           </fieldset>
           <Field label="Short Description">
             <textarea className={textareaClass} value={form.description} onChange={(event) => updateField("description", event.target.value)} placeholder="A short card-ready project summary." required />
+          </Field>
+          <Field label="Learn More Introduction">
+            <textarea className={textareaClass} value={form.intro} onChange={(event) => updateField("intro", event.target.value)} placeholder="A concise introduction shown in the Learn More panel." />
           </Field>
           <Field label="Full Description">
             <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#050816]/60">

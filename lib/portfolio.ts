@@ -6,6 +6,7 @@ export type PortfolioProject = {
   title: string;
   category: string;
   description: string;
+  intro?: string;
   result: string;
   tags: string[];
   imageUrl?: string;
@@ -26,6 +27,7 @@ export type PortfolioProjectInput = {
   title: string;
   category: string;
   description: string;
+  intro?: string;
   result: string;
   tags: string[];
   imageUrl?: string;
@@ -51,6 +53,7 @@ function normalizeProject(doc: Document): PortfolioProject {
     title: doc.title,
     category: doc.category,
     description: doc.description,
+    intro: typeof doc.intro === "string" ? doc.intro : undefined,
     result: doc.result,
     tags: Array.isArray(doc.tags) ? doc.tags : [],
     imageUrl: doc.imageUrl || undefined,
@@ -71,6 +74,7 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
   const title = cleanString(input.title);
   const category = cleanString(input.category);
   const description = cleanString(input.description);
+  const intro = cleanString(input.intro);
   const result = cleanString(input.result);
   const tags = Array.isArray(input.tags)
     ? input.tags.map((tag) => cleanString(tag)).filter(Boolean)
@@ -84,6 +88,7 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
     title,
     category,
     description,
+    intro,
     result,
     tags,
     imageUrl: cleanString(input.imageUrl) || undefined,
