@@ -1,6 +1,5 @@
 "use client";
 
-import { ComparisonTable } from "@/components/pricing/ComparisonTable";
 import { PricingCards } from "@/components/pricing/PricingCards";
 import { PricingCTA } from "@/components/pricing/PricingCTA";
 import { PricingHero } from "@/components/pricing/PricingHero";
@@ -26,7 +25,6 @@ export function PricingPage() {
       <div className="relative">
         <PricingHero />
         <PricingCards />
-        <ComparisonTable />
         <PricingCTA />
       </div>
     </div>

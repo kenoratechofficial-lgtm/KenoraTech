@@ -3,7 +3,7 @@ import { PricingPage as PricingPageContent } from "@/components/pricing/PricingP
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Explore transparent INR pricing for KenoraTech websites, SaaS interfaces, CMS builds and custom digital products.",
+  description: "Explore KenoraTech pricing for websites, e-commerce stores, custom web applications, and Android apps.",
   alternates: { canonical: "/pricing" }
 };
 

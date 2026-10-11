@@ -4,7 +4,13 @@ declare global {
   var __mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const options = {};
+// Fail quickly when Atlas is unavailable, and reuse one connection pool per
+// server process instead of opening a new client for every API request.
+const options = {
+  serverSelectionTimeoutMS: 5000,
+  connectTimeoutMS: 5000,
+  maxPoolSize: 10
+};
 
 export class DatabaseConnectionError extends Error {
   constructor(message = "Database connection failed. Check MongoDB Atlas environment variables and Network Access.") {
@@ -25,15 +31,15 @@ export async function getMongoDb() {
   }
 
   const mongoClientPromise = globalThis.__mongoClientPromise ?? new MongoClient(uri, options).connect();
-
-  if (process.env.NODE_ENV !== "production") {
-    globalThis.__mongoClientPromise = mongoClientPromise;
-  }
+  globalThis.__mongoClientPromise = mongoClientPromise;
 
   try {
     const client = await mongoClientPromise;
     return client.db(process.env.MONGODB_DB || "kenora-tech");
   } catch (error) {
+    if (globalThis.__mongoClientPromise === mongoClientPromise) {
+      globalThis.__mongoClientPromise = undefined;
+    }
     console.error("MongoDB connection failed:", error);
     throw new DatabaseConnectionError();
   }

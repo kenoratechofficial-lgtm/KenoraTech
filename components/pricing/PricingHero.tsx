@@ -42,7 +42,7 @@ export function PricingHero() {
           </span>
         </h1>
         <p className="mx-auto mt-6 max-w-[560px] text-base leading-8 text-white/72 lg:mx-0">
-          Choose the perfect plan for your business. Upgrade, downgrade, or customize anytime to fit your requirements.
+          Straightforward prices for websites, online stores, custom applications, and Android apps.
         </p>
       </motion.div>
 
