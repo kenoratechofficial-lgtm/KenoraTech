@@ -15,6 +15,9 @@ export type PortfolioProject = {
   watermarkEnabled: boolean;
   sortOrder: number;
   createdAt: string;
+  creatorIds?: string[];
+  creatorNames?: string[];
+  // Legacy fields retained so projects saved with the original single creator remain readable.
   creatorId?: string;
   creatorName?: string;
 };
@@ -32,6 +35,8 @@ export type PortfolioProjectInput = {
   demoUrl?: string;
   watermarkEnabled?: boolean;
   sortOrder?: number;
+  creatorIds?: string[];
+  creatorNames?: string[];
   creatorId?: string;
   creatorName?: string;
 };
@@ -55,6 +60,8 @@ function normalizeProject(doc: Document): PortfolioProject {
     watermarkEnabled: doc.watermarkEnabled === true,
     sortOrder: Number(doc.sortOrder || 0),
     createdAt: doc.createdAt?.toISOString?.() || new Date().toISOString(),
+    creatorIds: Array.isArray(doc.creatorIds) ? doc.creatorIds.filter((id: unknown): id is string => typeof id === "string") : typeof doc.creatorId === "string" ? [doc.creatorId] : undefined,
+    creatorNames: Array.isArray(doc.creatorNames) ? doc.creatorNames.filter((name: unknown): name is string => typeof name === "string") : typeof doc.creatorName === "string" ? [doc.creatorName] : undefined,
     creatorId: typeof doc.creatorId === "string" ? doc.creatorId : undefined,
     creatorName: typeof doc.creatorName === "string" ? doc.creatorName : undefined
   };
@@ -86,8 +93,8 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
     demoUrl: cleanString(input.demoUrl) || undefined,
     watermarkEnabled: input.watermarkEnabled === true,
     sortOrder: Number(input.sortOrder || 0),
-    creatorId: cleanString(input.creatorId) || undefined,
-    creatorName: cleanString(input.creatorName) || undefined
+    creatorIds: Array.isArray(input.creatorIds) ? [...new Set(input.creatorIds.map(cleanString).filter(Boolean))] : cleanString(input.creatorId) ? [cleanString(input.creatorId)] : [],
+    creatorNames: Array.isArray(input.creatorNames) ? input.creatorNames.map(cleanString).filter(Boolean) : cleanString(input.creatorName) ? [cleanString(input.creatorName)] : []
   };
 }
 

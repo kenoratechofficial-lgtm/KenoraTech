@@ -44,7 +44,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
     sortOrder: String(initialProject?.sortOrder ?? 0),
     demoUrl: ""
   });
-  const [creatorId, setCreatorId] = useState(initialProject?.creatorId || "");
+  const [creatorIds, setCreatorIds] = useState<string[]>(initialProject?.creatorIds || (initialProject?.creatorId ? [initialProject.creatorId] : []));
   useEffect(() => {
     const token = window.localStorage.getItem("kenora-admin-token") || "";
     void fetch("/api/admin/content/team", { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" })
@@ -103,8 +103,8 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
             demoEnabled,
             demoRequiresApproval,
             demoUrl: form.demoUrl,
-            creatorId,
-            creatorName: teamMembers.find((member) => member.id === creatorId)?.title || "",
+            creatorIds,
+            creatorNames: creatorIds.map((id) => teamMembers.find((member) => member.id === id)?.title || "").filter(Boolean),
             watermarkEnabled,
             tags: form.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
           })
@@ -128,12 +128,18 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           <Field label="Category">
             <input className={inputClass} value={form.category} onChange={(event) => updateField("category", event.target.value)} placeholder="Web Development" required />
           </Field>
-          <Field label="Project Creator">
-            <select className={inputClass} value={creatorId} onChange={(event) => setCreatorId(event.target.value)}>
-              <option value="" className="bg-[#050816]">Select a team member</option>
-              {teamMembers.map((member) => <option key={member.id} value={member.id} className="bg-[#050816]">{member.title}{member.designation ? ` — ${member.designation}` : ""}</option>)}
-            </select>
-          </Field>
+          <fieldset className="grid gap-2 text-sm font-semibold text-white/78">
+            <legend>Project Team</legend>
+            <p className="text-xs font-normal text-white/45">Select every team member who worked on this project.</p>
+            <div className="grid gap-2 rounded-2xl border border-white/[0.08] bg-[#050816]/60 p-3 sm:grid-cols-2">
+              {teamMembers.length ? teamMembers.map((member) => (
+                <label key={member.id} className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-white/75 hover:bg-white/[0.04]">
+                  <input type="checkbox" checked={creatorIds.includes(member.id)} onChange={(event) => setCreatorIds((current) => event.target.checked ? [...current, member.id] : current.filter((id) => id !== member.id))} />
+                  <span>{member.title}{member.designation ? <span className="ml-1 text-white/40">· {member.designation}</span> : null}</span>
+                </label>
+              )) : <p className="px-3 py-2 text-xs font-normal text-white/45">No team members available.</p>}
+            </div>
+          </fieldset>
           <Field label="Short Description">
             <textarea className={textareaClass} value={form.description} onChange={(event) => updateField("description", event.target.value)} placeholder="A short card-ready project summary." required />
           </Field>
