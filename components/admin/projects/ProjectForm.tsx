@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bold, CalendarDays, CheckCircle2, ImagePlus, Italic, Link2, List, UploadCloud } from "lucide-react";
 import type { PortfolioProject } from "@/lib/portfolio";
 
@@ -17,6 +17,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 const inputClass = "h-11 rounded-2xl border border-white/[0.08] bg-[#050816]/60 px-4 text-sm text-white outline-none transition placeholder:text-white/34 focus:border-[#3B82F6]/70 focus:ring-2 focus:ring-[#3B82F6]/18";
 const textareaClass = "min-h-28 rounded-2xl border border-white/[0.08] bg-[#050816]/60 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/34 focus:border-[#3B82F6]/70 focus:ring-2 focus:ring-[#3B82F6]/18";
 
+type TeamMemberOption = { id: string; title: string; designation?: string };
+
 const emptyForm = {
   title: "",
   category: "",
@@ -30,6 +32,7 @@ const emptyForm = {
 };
 
 export function ProjectForm({ initialProject }: { initialProject?: PortfolioProject }) {
+  const [teamMembers, setTeamMembers] = useState<TeamMemberOption[]>([]);
   const [form, setForm] = useState({
     title: initialProject?.title || emptyForm.title,
     category: initialProject?.category || emptyForm.category,
@@ -41,6 +44,14 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
     sortOrder: String(initialProject?.sortOrder ?? 0),
     demoUrl: ""
   });
+  const [creatorId, setCreatorId] = useState(initialProject?.creatorId || "");
+  useEffect(() => {
+    const token = window.localStorage.getItem("kenora-admin-token") || "";
+    void fetch("/api/admin/content/team", { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" })
+      .then((response) => response.json())
+      .then((body) => setTeamMembers(Array.isArray(body?.items) ? body.items : []))
+      .catch(() => setTeamMembers([]));
+  }, []);
   const [demoEnabled, setDemoEnabled] = useState(initialProject?.demoEnabled || false);
   const [demoRequiresApproval, setDemoRequiresApproval] = useState(initialProject?.demoRequiresApproval || false);
   const [watermarkEnabled, setWatermarkEnabled] = useState(initialProject?.watermarkEnabled || false);
@@ -92,6 +103,8 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
             demoEnabled,
             demoRequiresApproval,
             demoUrl: form.demoUrl,
+            creatorId,
+            creatorName: teamMembers.find((member) => member.id === creatorId)?.title || "",
             watermarkEnabled,
             tags: form.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
           })
@@ -114,6 +127,12 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           </Field>
           <Field label="Category">
             <input className={inputClass} value={form.category} onChange={(event) => updateField("category", event.target.value)} placeholder="Web Development" required />
+          </Field>
+          <Field label="Project Creator">
+            <select className={inputClass} value={creatorId} onChange={(event) => setCreatorId(event.target.value)}>
+              <option value="" className="bg-[#050816]">Select a team member</option>
+              {teamMembers.map((member) => <option key={member.id} value={member.id} className="bg-[#050816]">{member.title}{member.designation ? ` — ${member.designation}` : ""}</option>)}
+            </select>
           </Field>
           <Field label="Short Description">
             <textarea className={textareaClass} value={form.description} onChange={(event) => updateField("description", event.target.value)} placeholder="A short card-ready project summary." required />

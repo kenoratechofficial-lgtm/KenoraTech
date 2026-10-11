@@ -15,6 +15,8 @@ export type PortfolioProject = {
   watermarkEnabled: boolean;
   sortOrder: number;
   createdAt: string;
+  creatorId?: string;
+  creatorName?: string;
 };
 
 export type PortfolioProjectInput = {
@@ -30,6 +32,8 @@ export type PortfolioProjectInput = {
   demoUrl?: string;
   watermarkEnabled?: boolean;
   sortOrder?: number;
+  creatorId?: string;
+  creatorName?: string;
 };
 
 function cleanString(value: unknown) {
@@ -50,7 +54,9 @@ function normalizeProject(doc: Document): PortfolioProject {
     demoRequiresApproval: doc.demoRequiresApproval === true,
     watermarkEnabled: doc.watermarkEnabled === true,
     sortOrder: Number(doc.sortOrder || 0),
-    createdAt: doc.createdAt?.toISOString?.() || new Date().toISOString()
+    createdAt: doc.createdAt?.toISOString?.() || new Date().toISOString(),
+    creatorId: typeof doc.creatorId === "string" ? doc.creatorId : undefined,
+    creatorName: typeof doc.creatorName === "string" ? doc.creatorName : undefined
   };
 }
 
@@ -79,7 +85,9 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
     demoRequiresApproval: input.demoEnabled === true && input.demoRequiresApproval === true,
     demoUrl: cleanString(input.demoUrl) || undefined,
     watermarkEnabled: input.watermarkEnabled === true,
-    sortOrder: Number(input.sortOrder || 0)
+    sortOrder: Number(input.sortOrder || 0),
+    creatorId: cleanString(input.creatorId) || undefined,
+    creatorName: cleanString(input.creatorName) || undefined
   };
 }
 
