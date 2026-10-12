@@ -6,10 +6,11 @@ import { createPortfolioProject, listPortfolioProjects } from "@/lib/portfolio";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const projects = await listPortfolioProjects();
-    return NextResponse.json({ projects });
+    const admin = isAuthorizedAdmin(request);
+    return NextResponse.json({ projects: admin ? projects : projects.filter((project) => project.status === "published") });
   } catch (error) {
     if (error instanceof DatabaseConnectionError) {
       return NextResponse.json({ error: error.message }, { status: 503 });

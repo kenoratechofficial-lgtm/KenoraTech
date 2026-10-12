@@ -17,7 +17,8 @@ export function ProjectsTable() {
 
   async function loadProjects() {
     setLoading(true);
-    const response = await fetch("/api/portfolio", { cache: "no-store" });
+    const token = window.localStorage.getItem("kenora-admin-token") || "";
+    const response = await fetch("/api/portfolio", { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
     const body = await response.json().catch(() => null);
     setProjects(response.ok ? body?.projects || [] : []);
     setLoading(false);
@@ -111,7 +112,7 @@ export function ProjectsTable() {
                   </div>
                 </td>
                 <td className="px-5 py-4">
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/12 px-3 py-1 text-xs font-bold text-emerald-300">Published</span>
+                  <span className={project.status === "draft" ? "rounded-full border border-amber-400/20 bg-amber-400/12 px-3 py-1 text-xs font-bold text-amber-300" : "rounded-full border border-emerald-400/20 bg-emerald-400/12 px-3 py-1 text-xs font-bold text-emerald-300"}>{project.status === "draft" ? "Draft" : "Published"}</span>
                 </td>
                 <td className="px-5 py-4">
                   <Star className="h-5 w-5 text-white/28" />

@@ -32,6 +32,7 @@ const emptyForm = {
   androidUrl: "",
   projectType: "project" as "project" | "app" | "website" | "software",
   details: "",
+  status: "published" as "draft" | "published",
   sortOrder: "0",
   demoUrl: ""
 };
@@ -51,6 +52,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
     androidUrl: initialProject?.androidUrl || emptyForm.androidUrl,
     projectType: initialProject?.projectType || emptyForm.projectType,
     details: initialProject?.details || emptyForm.details,
+    status: initialProject?.status || emptyForm.status,
     sortOrder: String(initialProject?.sortOrder ?? 0),
     demoUrl: ""
   });
@@ -182,13 +184,13 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8B5CF6]/22 to-[#3B82F6]/22 text-[#9CCBFF]">
                 <UploadCloud className="h-7 w-7" />
               </div>
-              <p className="mt-4 text-sm font-bold text-white">{uploading ? "Uploading image..." : form.imageUrl ? "Cover image uploaded — choose another" : "Choose cover image"}</p>
+              <p className="mt-4 text-sm font-bold text-white">{uploading ? "Uploading image..." : form.imageUrl ? "Single image uploaded — choose another" : "Choose one image or logo"}</p>
               <p className="mt-1 text-xs text-white/44">PNG, JPG or WebP up to 8MB</p>
               {form.imageUrl ? <div className="relative mx-auto mt-4 h-20 w-32 overflow-hidden rounded-lg border border-white/10"><Image src={form.imageUrl} alt="Uploaded project cover preview" fill sizes="128px" className="object-cover" /></div> : null}
             </div>
             <input type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" disabled={uploading} onChange={(event) => { void uploadCoverImage(event.target.files?.[0]); event.currentTarget.value = ""; }} />
           </label>
-          <div>
+          {form.projectType === "project" ? <div>
             <p className="text-sm font-semibold text-white/78">Gallery Upload</p>
             <div className="mt-3 grid grid-cols-3 gap-3">
               {Array.from({ length: 6 }).map((_, index) => (
@@ -197,7 +199,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
                 </button>
               ))}
             </div>
-          </div>
+          </div> : null}
         </div>
       </section>
 
@@ -219,6 +221,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           <Field label="Sort Order">
             <input className={inputClass} type="number" value={form.sortOrder} onChange={(event) => updateField("sortOrder", event.target.value)} />
           </Field>
+          <Field label="Publication Status"><select className={inputClass} value={form.status} onChange={(event) => updateField("status", event.target.value as typeof form.status)}><option value="published">Published</option><option value="draft">Draft</option></select></Field>
           <div className="grid gap-3 rounded-2xl border border-white/[0.08] bg-[#050816]/60 p-4">
             <p className="text-sm font-bold text-white">Protected Demo Settings</p>
             <label className="flex items-center justify-between gap-3 text-sm text-white/70"><span>Demo enabled</span><input type="checkbox" checked={demoEnabled} onChange={(event) => { setDemoEnabled(event.target.checked); if (!event.target.checked) setDemoRequiresApproval(false); }} /></label>

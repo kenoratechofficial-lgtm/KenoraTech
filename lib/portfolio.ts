@@ -12,6 +12,7 @@ export type PortfolioProject = {
   imageUrl?: string;
   liveUrl?: string;
   projectType?: "project" | "app" | "website" | "software";
+  status: "draft" | "published";
   androidUrl?: string;
   websiteUrl?: string;
   details?: string;
@@ -37,6 +38,7 @@ export type PortfolioProjectInput = {
   imageUrl?: string;
   liveUrl?: string;
   projectType?: "project" | "app" | "website" | "software";
+  status?: "draft" | "published";
   androidUrl?: string;
   websiteUrl?: string;
   details?: string;
@@ -67,6 +69,7 @@ function normalizeProject(doc: Document): PortfolioProject {
     imageUrl: doc.imageUrl || undefined,
     liveUrl: doc.liveUrl || undefined,
     projectType: ["project", "app", "website", "software"].includes(doc.projectType) ? doc.projectType : "project",
+    status: doc.status === "draft" ? "draft" : "published",
     androidUrl: typeof doc.androidUrl === "string" ? doc.androidUrl : undefined,
     websiteUrl: typeof doc.websiteUrl === "string" ? doc.websiteUrl : undefined,
     details: typeof doc.details === "string" ? doc.details : undefined,
@@ -105,6 +108,7 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
     intro,
     details,
     projectType,
+    status: input.status === "draft" ? "draft" : "published",
     result,
     tags,
     imageUrl: cleanString(input.imageUrl) || undefined,
@@ -128,6 +132,18 @@ async function getPortfolioCollection() {
 
 export async function listPortfolioProjects() {
   const collection = await getPortfolioCollection();
+  await collection.updateOne(
+    { title: "VikcastX" },
+    { $setOnInsert: {
+      title: "VikcastX", category: "App", projectType: "app", status: "published",
+      description: "Explore VikcastX on Android or visit the website.",
+      details: "Explore VikcastX on Android or visit the VikcastX website.", result: "", tags: [],
+      androidUrl: "https://vikcastx.com/download#android-download", websiteUrl: "https://vikcastx.com/",
+      liveUrl: "https://vikcastx.com/", demoEnabled: false, demoRequiresApproval: false,
+      watermarkEnabled: false, sortOrder: 0, createdAt: new Date(), updatedAt: new Date()
+    } },
+    { upsert: true }
+  );
   const projects = await collection.find({}).sort({ sortOrder: 1, createdAt: -1 }).toArray();
 
   return projects.map(normalizeProject);
