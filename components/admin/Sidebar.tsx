@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BadgeDollarSign,
+  Smartphone,
   CalendarDays,
   CircleUserRound,
   ClipboardList,
@@ -25,6 +26,7 @@ const menuItems = [
   { label: "Contact Messages", href: "/admin/messages", icon: MessageSquareText },
   { label: "Bookings", href: "/admin/appointments", icon: CalendarDays },
   { label: "Portfolio Projects", href: "/admin/projects", icon: FolderKanban },
+  { label: "Apps", href: "/admin/apps", icon: Smartphone },
   { label: "Careers & Jobs", href: "/admin/jobs", icon: BriefcaseBusiness },
   { label: "Applications", href: "/admin/applications", icon: ClipboardList },
   { label: "Services", href: "/admin/services", icon: Sparkles },
@@ -49,7 +51,7 @@ export function Sidebar() {
         </div>
       </Link>
 
-      <nav className="mt-9 grid gap-1" aria-label="Admin navigation">
+      <nav className="mt-9 grid max-h-[calc(100vh-300px)] gap-1 overflow-y-auto" aria-label="Admin navigation">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href || (item.href === "/admin/projects" && pathname.startsWith("/admin/projects"));

@@ -3,8 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isAuthorizedAdmin } from "@/lib/admin-auth";
 import { DatabaseConnectionError, getMongoDb } from "@/lib/mongodb";
 
-const contentTypes = new Set(["services", "team", "testimonials", "process", "navigation", "social-links", "settings", "home", "about", "contact"]);
-const publicTypes = new Set(["services", "team", "testimonials", "process", "navigation", "social-links", "home", "about", "contact"]);
+const contentTypes = new Set(["services", "team", "testimonials", "process", "navigation", "social-links", "settings", "home", "about", "contact", "apps"]);
+const publicTypes = new Set(["services", "team", "testimonials", "process", "navigation", "social-links", "home", "about", "contact", "apps"]);
 const text = (value: unknown, length = 2000) => typeof value === "string" ? value.trim().slice(0, length) : "";
 const list = (value: unknown) => Array.isArray(value) ? value.map((item) => text(item, 120)).filter(Boolean).slice(0, 30) : [];
 
@@ -18,6 +18,9 @@ function clean(type: string, body: Record<string, unknown>) {
   const description = text(body.description, 4000);
   if (type !== "settings" && type !== "home" && !title) throw new Error("A title is required.");
   if (["services", "process", "testimonials"].includes(type) && !description) throw new Error("A description is required.");
+  const androidUrl = text(body.androidUrl, 1000);
+  const websiteUrl = text(body.websiteUrl, 1000);
+  if (type === "apps" && !androidUrl && !websiteUrl) throw new Error("Add an Android app link, a website link, or both.");
   const imageId = text(body.imageId, 64);
   if (imageId && !ObjectId.isValid(imageId)) throw new Error("Invalid image reference.");
   return {
@@ -25,7 +28,7 @@ function clean(type: string, body: Record<string, unknown>) {
     linkedinUrl: text(body.linkedinUrl, 500) || undefined, githubUrl: text(body.githubUrl, 500) || undefined,
     email: text(body.email, 320) || undefined, icon: text(body.icon, 60) || undefined,
     imageUrl: text(body.imageUrl, 1000) || undefined, category: text(body.category, 160) || undefined,
-    url: text(body.url, 1000) || undefined, features: list(body.features),
+    url: text(body.url, 1000) || undefined, androidUrl: androidUrl || undefined, websiteUrl: websiteUrl || undefined, features: list(body.features),
     isActive: body.isActive !== false, sortOrder: Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0,
     updatedAt: new Date()
   };
