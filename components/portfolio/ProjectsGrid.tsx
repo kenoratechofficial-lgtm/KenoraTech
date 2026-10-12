@@ -5,7 +5,7 @@ import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import type { PortfolioProject } from "@/lib/portfolio";
 
 const vikcastX: PortfolioProject = {
-  id: "vikcastx", title: "VikcastX", category: "App", projectType: "app",
+  id: "vikcastx", title: "VikcastX", category: "App", projectType: "app", status: "published",
   description: "Explore VikcastX on Android or visit the website.",
   details: "Explore VikcastX on Android or visit the VikcastX website.",
   result: "", tags: [], androidUrl: "https://vikcastx.com/download#android-download",
