@@ -181,6 +181,11 @@ export async function updatePortfolioProject(id: string, input: Partial<Portfoli
   // Protected demo URLs are never returned by the public project API; preserve the
   // existing private URL unless an admin explicitly enters a replacement value.
   if (!project.demoUrl && existing.demoUrl) project.demoUrl = existing.demoUrl;
+  if (input.demoEnabled === undefined) project.demoEnabled = existing.demoEnabled === true;
+  if (input.demoRequiresApproval === undefined) project.demoRequiresApproval = existing.demoRequiresApproval === true;
+  if (input.watermarkEnabled === undefined) project.watermarkEnabled = existing.watermarkEnabled === true;
+  if (input.creatorIds === undefined) project.creatorIds = Array.isArray(existing.creatorIds) ? existing.creatorIds : typeof existing.creatorId === "string" ? [existing.creatorId] : [];
+  if (input.creatorNames === undefined) project.creatorNames = Array.isArray(existing.creatorNames) ? existing.creatorNames : typeof existing.creatorName === "string" ? [existing.creatorName] : [];
   await collection.updateOne(
     { _id: new ObjectId(id) },
     {
