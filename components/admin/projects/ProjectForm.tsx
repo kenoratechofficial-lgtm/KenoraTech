@@ -8,11 +8,11 @@ import type { PortfolioProject } from "@/lib/portfolio";
 const inputClass = "h-11 rounded-2xl border border-white/[0.08] bg-[#050816]/60 px-4 text-sm text-white outline-none transition placeholder:text-white/34 focus:border-[#3B82F6]/70 focus:ring-2 focus:ring-[#3B82F6]/18";
 const textareaClass = "min-h-28 rounded-2xl border border-white/[0.08] bg-[#050816]/60 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/34 focus:border-[#3B82F6]/70 focus:ring-2 focus:ring-[#3B82F6]/18";
 
-type ProjectType = "project" | "app" | "website" | "software";
+type ProjectType = "app" | "website" | "software";
 
 export function ProjectForm({ initialProject }: { initialProject?: PortfolioProject }) {
   const [title, setTitle] = useState(initialProject?.title || "");
-  const [projectType, setProjectType] = useState<ProjectType>(initialProject?.projectType || "project");
+  const [projectType, setProjectType] = useState<ProjectType>(initialProject?.projectType && initialProject.projectType !== "project" ? initialProject.projectType : "website");
   const [description, setDescription] = useState(initialProject?.description || "");
   const [details, setDetails] = useState(initialProject?.details || initialProject?.intro || "");
   const [imageUrl, setImageUrl] = useState(initialProject?.imageUrl || "");
@@ -54,7 +54,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
   }}>
     <section className="grid gap-5 rounded-3xl border border-white/[0.08] bg-[#0D1323]/82 p-6">
       <label className="grid gap-2 text-sm font-semibold text-white/78">Name<input className={inputClass} value={title} onChange={(event) => setTitle(event.target.value)} required /></label>
-      <label className="grid gap-2 text-sm font-semibold text-white/78">Type<select className={inputClass} value={projectType} onChange={(event) => setProjectType(event.target.value as ProjectType)}><option value="project">Project</option><option value="app">App</option><option value="website">Website</option><option value="software">Software</option></select></label>
+      <label className="grid gap-2 text-sm font-semibold text-white/78">Type<select className={inputClass} value={projectType} onChange={(event) => setProjectType(event.target.value as ProjectType)}><option value="app">App</option><option value="website">Website</option><option value="software">Software</option></select></label>
       <label className="grid gap-2 text-sm font-semibold text-white/78">Short description<textarea className={textareaClass} value={description} onChange={(event) => setDescription(event.target.value)} required /></label>
       <label className="grid gap-2 text-sm font-semibold text-white/78">Learn More details<textarea className={textareaClass} value={details} onChange={(event) => setDetails(event.target.value)} placeholder="Details shown when visitors select Learn More" /></label>
       <label className="grid gap-2 text-sm font-semibold text-white/78">Android app link (optional)<input className={inputClass} type="url" value={androidUrl} onChange={(event) => setAndroidUrl(event.target.value)} placeholder="https://..." /></label>
