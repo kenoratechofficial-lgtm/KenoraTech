@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowUp, Edit3, ExternalLink, Star, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Edit3, ExternalLink, Search, Star, Trash2 } from "lucide-react";
 import { DataTable } from "@/components/admin/DataTable";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { Loading } from "@/components/admin/Loading";
@@ -14,6 +14,8 @@ export function ProjectsTable() {
   const [projects, setProjects] = useState<PortfolioProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
+  const [query, setQuery] = useState("");
 
   async function loadProjects() {
     setLoading(true);
@@ -70,9 +72,20 @@ export function ProjectsTable() {
     return <EmptyState title="No projects yet" description="Projects you add from the admin panel will appear here." />;
   }
 
+  const visibleProjects = projects.filter((project) => {
+    const matchesStatus = statusFilter === "all" || project.status === statusFilter;
+    const matchesQuery = `${project.title} ${project.category}`.toLowerCase().includes(query.trim().toLowerCase());
+    return matchesStatus && matchesQuery;
+  });
+
   return (
     <div className="grid gap-3">
       {status ? <p className="rounded-2xl border border-white/[0.08] bg-[#0D1323]/78 px-4 py-3 text-sm text-white/70">{status}</p> : null}
+      <div className="grid gap-3 sm:grid-cols-[1fr_190px]">
+        <label className="relative block"><span className="sr-only">Search projects</span><Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects..." className="h-11 w-full rounded-2xl border border-white/[0.08] bg-[#0D1323]/78 pl-11 pr-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-[#3B82F6]/70" /></label>
+        <label className="sr-only" htmlFor="project-status-filter">Filter by status</label><select id="project-status-filter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)} className="h-11 rounded-2xl border border-white/[0.08] bg-[#0D1323]/78 px-4 text-sm text-white/80 outline-none"><option value="all">All Status</option><option value="published">Published</option><option value="draft">Draft</option></select>
+      </div>
+      {!visibleProjects.length ? <EmptyState title="No matching projects" description="Try another search or status filter." /> : null}
       <DataTable>
         <table className="w-full min-w-[1040px] border-collapse text-left text-sm">
           <thead>
@@ -85,12 +98,14 @@ export function ProjectsTable() {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project, index) => (
+            {visibleProjects.map((project, visibleIndex) => {
+              const index = projects.findIndex((entry) => entry.id === project.id);
+              return (
               <motion.tr
                 key={project.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: index * 0.04 }}
+                transition={{ duration: 0.35, delay: visibleIndex * 0.04 }}
                 className="border-b border-white/[0.06] text-white/72 transition hover:bg-white/[0.035] last:border-b-0"
               >
                 <td className="px-5 py-4">
@@ -134,7 +149,7 @@ export function ProjectsTable() {
                   </div>
                 </td>
               </motion.tr>
-            ))}
+            );})}
           </tbody>
         </table>
       </DataTable>
