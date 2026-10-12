@@ -21,6 +21,8 @@ function clean(type: string, body: Record<string, unknown>) {
   const androidUrl = text(body.androidUrl, 1000);
   const websiteUrl = text(body.websiteUrl, 1000);
   if (type === "apps" && !androidUrl && !websiteUrl) throw new Error("Add an Android app link, a website link, or both.");
+  const productType = text(body.productType, 30);
+  if (type === "apps" && !["app", "website", "software"].includes(productType)) throw new Error("Choose App, Website, or Software.");
   const imageId = text(body.imageId, 64);
   if (imageId && !ObjectId.isValid(imageId)) throw new Error("Invalid image reference.");
   return {
@@ -28,7 +30,7 @@ function clean(type: string, body: Record<string, unknown>) {
     linkedinUrl: text(body.linkedinUrl, 500) || undefined, githubUrl: text(body.githubUrl, 500) || undefined,
     email: text(body.email, 320) || undefined, icon: text(body.icon, 60) || undefined,
     imageUrl: text(body.imageUrl, 1000) || undefined, category: text(body.category, 160) || undefined,
-    url: text(body.url, 1000) || undefined, androidUrl: androidUrl || undefined, websiteUrl: websiteUrl || undefined, features: list(body.features),
+    url: text(body.url, 1000) || undefined, androidUrl: androidUrl || undefined, websiteUrl: websiteUrl || undefined, productType: type === "apps" ? productType : undefined, features: list(body.features),
     isActive: body.isActive !== false, sortOrder: Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0,
     updatedAt: new Date()
   };

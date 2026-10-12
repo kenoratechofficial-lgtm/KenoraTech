@@ -5,7 +5,7 @@ import { adminToast } from "@/components/admin/AdminToaster";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { ArrowDown, ArrowUp, Edit3, Plus, Trash2, X } from "lucide-react";
 
-type AppItem = { id: string; title: string; description: string; androidUrl?: string; websiteUrl?: string; isActive: boolean; sortOrder: number };
+type AppItem = { id: string; title: string; description: string; androidUrl?: string; websiteUrl?: string; productType: "app" | "website" | "software"; isActive: boolean; sortOrder: number };
 const input = "h-11 rounded-xl border border-white/[.08] bg-[#050816] px-4 text-sm text-white outline-none";
 
 export function AppsManager() {
@@ -15,6 +15,7 @@ export function AppsManager() {
   const [description, setDescription] = useState("");
   const [androidUrl, setAndroidUrl] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [productType, setProductType] = useState<AppItem["productType"]>("app");
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState("");
   const token = () => localStorage.getItem("kenora-admin-token") || "";
@@ -24,13 +25,13 @@ export function AppsManager() {
     setItems(response.ok && Array.isArray(body?.items) ? body.items : []);
   }, []);
   useEffect(() => { void load(); }, [load]);
-  const clear = () => { setEditing(null); setTitle(""); setDescription(""); setAndroidUrl(""); setWebsiteUrl(""); setIsActive(true); setError(""); };
+  const clear = () => { setEditing(null); setTitle(""); setDescription(""); setAndroidUrl(""); setWebsiteUrl(""); setProductType("app"); setIsActive(true); setError(""); };
   const save = async (event: React.FormEvent) => {
     event.preventDefault(); setError("");
     const response = await fetch(editing ? `/api/admin/content/apps?id=${editing.id}` : "/api/admin/content/apps", {
       method: editing ? "PATCH" : "POST",
       headers: { Authorization: `Bearer ${token()}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description, androidUrl, websiteUrl, isActive, sortOrder: editing?.sortOrder || items.length + 1 })
+      body: JSON.stringify({ title, description, androidUrl, websiteUrl, productType, isActive, sortOrder: editing?.sortOrder || items.length + 1 })
     });
     const body = await response.json().catch(() => null);
     if (!response.ok) { setError(body?.error || "Unable to save app."); return; }
@@ -52,7 +53,8 @@ export function AppsManager() {
     <div><h1 className="text-3xl font-black text-white">Apps</h1><p className="mt-2 text-sm text-white/55">Manage apps and their Android download and website links. Either link can be added on its own.</p></div>
     <form onSubmit={save} className="grid gap-4 rounded-3xl border border-white/[.08] bg-[#0D1323]/78 p-6">
       <div className="flex justify-between"><b className="text-white">{editing ? `Edit ${editing.title}` : "Add app"}</b>{editing ? <button type="button" onClick={clear} aria-label="Cancel editing"><X className="h-4 w-4" /></button> : null}</div>
-      <input required value={title} onChange={(event) => setTitle(event.target.value)} placeholder="App name" className={input} />
+      <input required value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Name" className={input} />
+      <label className="grid gap-2 text-sm font-semibold text-white/78">Portfolio section<select value={productType} onChange={(event) => setProductType(event.target.value as AppItem["productType"])} className={input}><option value="app">App</option><option value="website">Website</option><option value="software">Software</option></select></label>
       <textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Short description (optional)" rows={3} className={`${input} h-auto py-3`} />
       <input type="url" value={androidUrl} onChange={(event) => setAndroidUrl(event.target.value)} placeholder="Android app link (optional)" className={input} />
       <input type="url" value={websiteUrl} onChange={(event) => setWebsiteUrl(event.target.value)} placeholder="Website link (optional)" className={input} />
@@ -61,6 +63,6 @@ export function AppsManager() {
       {error ? <p role="alert" className="text-sm text-red-300">{error}</p> : null}
       <button className="inline-flex h-11 w-fit items-center gap-2 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] px-4 text-sm font-bold text-white"><Plus className="h-4 w-4" />{editing ? "Update app" : "Add app"}</button>
     </form>
-    {!items.length ? <EmptyState title="No apps yet" description="Add an app above to manage its public links." /> : <div className="grid gap-3">{items.map((item, index) => <article key={item.id} className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-[#0D1323]/78 p-4"><div className="min-w-0 flex-1"><h2 className="font-bold text-white">{item.title}</h2><p className="truncate text-sm text-white/55">{item.androidUrl || item.websiteUrl}</p><span className={item.isActive === false ? "text-xs text-amber-300" : "text-xs text-emerald-300"}>{item.isActive === false ? "Hidden" : "Published"}</span></div><button aria-label="Move up" disabled={index === 0} onClick={() => void move(index, -1)}><ArrowUp className="h-4 w-4" /></button><button aria-label="Move down" disabled={index === items.length - 1} onClick={() => void move(index, 1)}><ArrowDown className="h-4 w-4" /></button><button aria-label={`Edit ${item.title}`} onClick={() => { setEditing(item); setTitle(item.title); setDescription(item.description || ""); setAndroidUrl(item.androidUrl || ""); setWebsiteUrl(item.websiteUrl || ""); setIsActive(item.isActive !== false); }}><Edit3 className="h-4 w-4 text-[#8EC5FF]" /></button><button aria-label={`Delete ${item.title}`} onClick={() => void remove(item)}><Trash2 className="h-4 w-4 text-red-200" /></button></article>)}</div>}
+    {!items.length ? <EmptyState title="No apps or software yet" description="Add an app, website, or software above to manage its public links." /> : <div className="grid gap-3">{items.map((item, index) => <article key={item.id} className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-[#0D1323]/78 p-4"><div className="min-w-0 flex-1"><h2 className="font-bold text-white">{item.title}</h2><p className="truncate text-sm text-white/55">{item.androidUrl || item.websiteUrl}</p><span className="mr-3 text-xs capitalize text-white/50">{item.productType || "app"}</span><span className={item.isActive === false ? "text-xs text-amber-300" : "text-xs text-emerald-300"}>{item.isActive === false ? "Hidden" : "Published"}</span></div><button aria-label="Move up" disabled={index === 0} onClick={() => void move(index, -1)}><ArrowUp className="h-4 w-4" /></button><button aria-label="Move down" disabled={index === items.length - 1} onClick={() => void move(index, 1)}><ArrowDown className="h-4 w-4" /></button><button aria-label={`Edit ${item.title}`} onClick={() => { setEditing(item); setTitle(item.title); setDescription(item.description || ""); setAndroidUrl(item.androidUrl || ""); setWebsiteUrl(item.websiteUrl || ""); setProductType(item.productType || "app"); setIsActive(item.isActive !== false); }}><Edit3 className="h-4 w-4 text-[#8EC5FF]" /></button><button aria-label={`Delete ${item.title}`} onClick={() => void remove(item)}><Trash2 className="h-4 w-4 text-red-200" /></button></article>)}</div>}
   </div>;
 }
