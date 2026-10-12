@@ -132,6 +132,13 @@ async function getPortfolioCollection() {
 
 export async function listPortfolioProjects() {
   const collection = await getPortfolioCollection();
+  const db = await getMongoDb();
+  const migrations = db.collection("portfolioMigrations");
+  const publishKenoraQrId = new ObjectId("64a000000000000000000002");
+  if (!await migrations.findOne({ _id: publishKenoraQrId })) {
+    await collection.updateOne({ title: "Kenora QR Studio" }, { $set: { status: "published", projectType: "website" } });
+    await migrations.updateOne({ _id: publishKenoraQrId }, { $setOnInsert: { completedAt: new Date() } }, { upsert: true });
+  }
   await collection.updateOne(
     { title: "VikcastX" },
     { $setOnInsert: {
