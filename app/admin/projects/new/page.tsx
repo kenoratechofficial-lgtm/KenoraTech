@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function AddProjectPage() {
   return (
     <div className="grid gap-7">
-      <PageHeader title="Add New Project" description="Create a polished portfolio case study with media, project details and publishing controls." />
+      <PageHeader title="Add New Project" description="Choose a portfolio type, add its links and details, and upload a cover image or app logo." />
       <ProjectForm />
     </div>
   );

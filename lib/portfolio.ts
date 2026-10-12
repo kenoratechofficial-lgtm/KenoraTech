@@ -11,6 +11,10 @@ export type PortfolioProject = {
   tags: string[];
   imageUrl?: string;
   liveUrl?: string;
+  projectType?: "project" | "app" | "website" | "software";
+  androidUrl?: string;
+  websiteUrl?: string;
+  details?: string;
   demoEnabled: boolean;
   demoRequiresApproval: boolean;
   watermarkEnabled: boolean;
@@ -32,6 +36,10 @@ export type PortfolioProjectInput = {
   tags: string[];
   imageUrl?: string;
   liveUrl?: string;
+  projectType?: "project" | "app" | "website" | "software";
+  androidUrl?: string;
+  websiteUrl?: string;
+  details?: string;
   demoEnabled?: boolean;
   demoRequiresApproval?: boolean;
   demoUrl?: string;
@@ -58,6 +66,10 @@ function normalizeProject(doc: Document): PortfolioProject {
     tags: Array.isArray(doc.tags) ? doc.tags : [],
     imageUrl: doc.imageUrl || undefined,
     liveUrl: doc.liveUrl || undefined,
+    projectType: ["project", "app", "website", "software"].includes(doc.projectType) ? doc.projectType : "project",
+    androidUrl: typeof doc.androidUrl === "string" ? doc.androidUrl : undefined,
+    websiteUrl: typeof doc.websiteUrl === "string" ? doc.websiteUrl : undefined,
+    details: typeof doc.details === "string" ? doc.details : undefined,
     demoEnabled: doc.demoEnabled === true,
     demoRequiresApproval: doc.demoRequiresApproval === true,
     watermarkEnabled: doc.watermarkEnabled === true,
@@ -75,6 +87,8 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
   const category = cleanString(input.category);
   const description = cleanString(input.description);
   const intro = cleanString(input.intro);
+  const details = cleanString(input.details);
+  const projectType = ["project", "app", "website", "software"].includes(String(input.projectType)) ? input.projectType : "project";
   const result = cleanString(input.result);
   const tags = Array.isArray(input.tags)
     ? input.tags.map((tag) => cleanString(tag)).filter(Boolean)
@@ -89,10 +103,14 @@ function sanitizeProjectInput(input: Partial<PortfolioProjectInput>) {
     category,
     description,
     intro,
+    details,
+    projectType,
     result,
     tags,
     imageUrl: cleanString(input.imageUrl) || undefined,
     liveUrl: cleanString(input.liveUrl) || undefined,
+    androidUrl: cleanString(input.androidUrl) || undefined,
+    websiteUrl: cleanString(input.websiteUrl) || undefined,
     demoEnabled: input.demoEnabled === true,
     demoRequiresApproval: input.demoEnabled === true && input.demoRequiresApproval === true,
     demoUrl: cleanString(input.demoUrl) || undefined,

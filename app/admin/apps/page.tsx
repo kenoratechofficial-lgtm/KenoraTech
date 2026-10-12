@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { AppsManager } from "@/components/admin/AppsManager";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = { title: "Apps", description: "Manage app download and website links." };
 
-export default function AppsPage() { return <AppsManager />; }
+export default function AppsPage() { redirect("/admin/projects"); }

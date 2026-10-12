@@ -28,6 +28,10 @@ const emptyForm = {
   tags: "",
   imageUrl: "",
   liveUrl: "",
+  websiteUrl: "",
+  androidUrl: "",
+  projectType: "project" as "project" | "app" | "website" | "software",
+  details: "",
   sortOrder: "0",
   demoUrl: ""
 };
@@ -43,6 +47,10 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
     tags: initialProject?.tags.join(", ") || emptyForm.tags,
     imageUrl: initialProject?.imageUrl || emptyForm.imageUrl,
     liveUrl: initialProject?.liveUrl || emptyForm.liveUrl,
+    websiteUrl: initialProject?.websiteUrl || emptyForm.websiteUrl,
+    androidUrl: initialProject?.androidUrl || emptyForm.androidUrl,
+    projectType: initialProject?.projectType || emptyForm.projectType,
+    details: initialProject?.details || emptyForm.details,
     sortOrder: String(initialProject?.sortOrder ?? 0),
     demoUrl: ""
   });
@@ -62,7 +70,7 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
   const [uploading, setUploading] = useState(false);
 
   function updateField(field: keyof typeof form, value: string) {
-    setForm((current) => ({ ...current, [field]: value }));
+    setForm((current) => ({ ...current, [field]: value } as typeof current));
   }
 
   async function uploadCoverImage(file?: File) {
@@ -129,6 +137,9 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           </Field>
           <Field label="Category">
             <input className={inputClass} value={form.category} onChange={(event) => updateField("category", event.target.value)} placeholder="Web Development" required />
+          </Field>
+          <Field label="Portfolio Type">
+            <select className={inputClass} value={form.projectType} onChange={(event) => updateField("projectType", event.target.value as typeof form.projectType)}><option value="project">Project</option><option value="app">App</option><option value="website">Website</option><option value="software">Software</option></select>
           </Field>
           <fieldset className="grid gap-2 text-sm font-semibold text-white/78">
             <legend>Project Team</legend>
@@ -199,6 +210,9 @@ export function ProjectForm({ initialProject }: { initialProject?: PortfolioProj
           <Field label="Live Demo URL">
             <input className={inputClass} value={form.liveUrl} onChange={(event) => updateField("liveUrl", event.target.value)} placeholder="https://example.com" />
           </Field>
+          <Field label="Website URL"><input className={inputClass} type="url" value={form.websiteUrl} onChange={(event) => updateField("websiteUrl", event.target.value)} placeholder="https://example.com" /></Field>
+          <Field label="Android App URL"><input className={inputClass} type="url" value={form.androidUrl} onChange={(event) => updateField("androidUrl", event.target.value)} placeholder="https://..." /></Field>
+          <Field label="Learn More Details"><textarea className={textareaClass} value={form.details} onChange={(event) => updateField("details", event.target.value)} placeholder="More information shown when visitors select Learn More." /></Field>
           <Field label="Cover Image URL">
             <input className={inputClass} value={form.imageUrl} onChange={(event) => updateField("imageUrl", event.target.value)} placeholder="https://..." />
           </Field>
