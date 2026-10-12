@@ -26,7 +26,7 @@ function clean(type: string, body: Record<string, unknown>) {
   const imageId = text(body.imageId, 64);
   if (imageId && !ObjectId.isValid(imageId)) throw new Error("Invalid image reference.");
   return {
-    title, description, imageId: imageId || undefined, designation: text(body.designation, 160) || undefined,
+    title, description, details: text(body.details, 8000) || undefined, imageId: imageId || undefined, designation: text(body.designation, 160) || undefined,
     linkedinUrl: text(body.linkedinUrl, 500) || undefined, githubUrl: text(body.githubUrl, 500) || undefined,
     email: text(body.email, 320) || undefined, icon: text(body.icon, 60) || undefined,
     imageUrl: text(body.imageUrl, 1000) || undefined, category: text(body.category, 160) || undefined,
