@@ -134,7 +134,7 @@ export async function listPortfolioProjects() {
   const collection = await getPortfolioCollection();
   const db = await getMongoDb();
   const migrations = db.collection("portfolioMigrations");
-  const removalId = "remove-kenora-qr-studio-v1";
+  const removalId = new ObjectId("64a000000000000000000001");
   if (!await migrations.findOne({ _id: removalId })) {
     await collection.deleteMany({ title: "Kenora QR Studio" });
     await migrations.updateOne({ _id: removalId }, { $setOnInsert: { completedAt: new Date() } }, { upsert: true });
